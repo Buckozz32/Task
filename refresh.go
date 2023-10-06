@@ -78,17 +78,12 @@ d
 		err = collection.FindOne(ctx, findFilter).Decode(&result)
 		if err != nil {
 			fmt.Printf("collection find err: %v\n", err)
-			/*if err == mongo.ErrNoDocuments {
-				w.WriteHeader(http.StatusUnauthorized)
-				return err
-			}*/
-			//w.WriteHeader(http.StatusInternalServerError)
 			return err
 		}
 
 		var rtExists bool
 		for _, hash := range result.Rts {
-			//err = bcrypt.CompareHashAndPassword(hash, []byte(rtString))
+			
 			err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(reverse(rtString)))
 			if err == nil {
 				rtExists = true
@@ -96,7 +91,7 @@ d
 			}
 		}
 		if !rtExists {
-			//w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusUnauthorized)
 			return errors.New("Not found")
 		}
 		return nil
